@@ -1,5 +1,11 @@
 # babel-helper-module-imports
 
+## WARNING
+This helper is **DEPRECATED** in favor of `addImport` method of file, compatible
+with `extractDynamicImports` option of babel-core.
+Eventually, it will be merged into babel-core and will not be available for
+other plugins and helpers.
+
 ## Installation
 
 ```sh

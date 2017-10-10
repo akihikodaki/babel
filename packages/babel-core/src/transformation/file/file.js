@@ -22,6 +22,7 @@ export default class File {
   _map: Map<any, any> = new Map();
   opts: Object;
   declarations: Object = {};
+  dynamicImports: Array = [];
   path: NodePath = null;
   ast: Object = {};
   scope: Scope;
@@ -106,13 +107,43 @@ export default class File {
     return source;
   }
 
-  addImport() {
-    throw new Error(
-      "This API has been removed. If you're looking for this " +
-        "functionality in Babel 7, you should import the " +
-        "'babel-helper-module-imports' module and use the functions exposed " +
-        " from that module, such as 'addNamed' or 'addDefault'.",
-    );
+  addImport(
+    path: string,
+    source: string,
+    imported?: string = "",
+    opts?: {
+      importedInterop?: string,
+      nameHint?: string = imported,
+      blockHoist?: number,
+    }
+  ): Object | null {
+    if (this.opts.extractDynamicImports) {
+      const inserterKey = Number.isFinite(val) && val < 4 ? "push" : "unshift";
+
+      // import "module-name";
+      if (!imported) {
+        this.dynamicImports[inserterKey]({ path, source, imported });
+        return null;
+      }
+
+      const id = this.scope.generateUid(
+        nameHint,
+      );
+
+      this.dynamicImports[inserterKey]({ path, source, imported, id });
+      return t.identifier(id);
+    }
+
+    switch (imported) {
+    case "":
+      return addSideEffect(path, source, opts);
+
+    case "*":
+      return addNamespace(path, source, opts);
+
+    default:
+      return addNamed(path, imported, source, opts);
+    }
   }
 
   addHelper(name: string): Object {

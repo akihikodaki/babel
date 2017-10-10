@@ -1,4 +1,4 @@
-import { addDefault, isModule } from "babel-helper-module-imports";
+import { isModule } from "babel-helper-module-imports";
 
 import definitions from "./definitions";
 
@@ -64,7 +64,7 @@ export default function({ types: t }, options) {
         if (cached) {
           cached = t.cloneDeep(cached);
         } else {
-          cached = addDefault(file.path, source, {
+          cached = file.addImport(file.path, source, {
             importedInterop: "uncompiled",
             nameHint,
             blockHoist,

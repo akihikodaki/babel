@@ -25,6 +25,10 @@ babel.transform(code, options) // => { code, map, ast }
 ```js
 var result = babel.transform("code();", options);
 result.code;
+result.dynamicImports[0].path
+result.dynamicImports[0].source // modul name
+result.dynamicImports[0].imported // "*", "", or identifier for named import
+result.dynamicImports[0].id // identifier of variable representing imported object
 result.map;
 result.ast;
 ```
@@ -41,7 +45,7 @@ babel.transformFile(filename, options, callback)
 
 ```js
 babel.transformFile("filename.js", options, function (err, result) {
-  result; // => { code, map, ast }
+  result; // => { code, dynamicImports, map, ast }
 });
 ```
 
@@ -51,7 +55,7 @@ Synchronous version of `babel.transformFile`. Returns the transformed contents o
 the `filename`.
 
 ```js
-babel.transformFileSync(filename, options) // => { code, map, ast }
+babel.transformFileSync(filename, options) // => { code, dynamicImports, map, ast }
 ```
 
 **Example**
@@ -95,6 +99,7 @@ Following is a table of the options you can use:
 | `compact`                | `"auto"`             | Do not include superfluous whitespace characters and line terminators. When set to `"auto"` compact is set to `true` on input sizes of >500KB |
 | `env`                    | `{}`                 | This is an object of keys that represent different environments. For example, you may have: `{ env: { production: { /* specific options */ } } }` which will use those options when the environment variable `BABEL_ENV` is set to `"production"`. If `BABEL_ENV` isn't set then `NODE_ENV` will be used, if it's not set then it defaults to `"development"` |
 | `extends`                | `null`               | A path to a `.babelrc` file to extend |
+| `extractDynamicImports`  | `false`              | If truthy, extract imports inserted by Babel into `dynamicImports` property of the result |
 | `filename`               | `"unknown"`          | Filename for use in errors etc |
 | `filenameRelative`       | `(filename)`         | Filename relative to `sourceRoot` |
 | `generatorOpts`          | `{}`                 | An object containing the options to be passed down to the babel code generator, babel-generator |

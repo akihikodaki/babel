@@ -44,6 +44,7 @@ const optionNames = new Set([
   "code",
   "ast",
   "extends",
+  "extractDynamicImports",
   "comments",
   "shouldPrintComment",
   "wrapPluginVisitorMethod",

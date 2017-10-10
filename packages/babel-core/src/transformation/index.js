@@ -1,5 +1,6 @@
 // @flow
 import traverse from "babel-traverse";
+import { addSideEffect, addNamed, addNamespace } from "babel-helper-module-imports";
 import type { SourceMap } from "convert-source-map";
 
 import type { ResolvedConfig, PluginPasses } from "../config";
@@ -38,6 +39,7 @@ export default function runTransform(
     metadata: file.metadata,
     options: options,
     ast: options.ast ? file.ast : null,
+    dynamicImports: options.extractDynamicImports ? file.dynamicImports : null,
     code: outputCode === undefined ? null : outputCode,
     map: outputMap === undefined ? null : outputMap,
   };

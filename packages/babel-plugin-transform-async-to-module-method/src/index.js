@@ -1,8 +1,6 @@
 import remapAsyncToGenerator from "babel-helper-remap-async-to-generator";
 import syntaxAsyncFunctions from "babel-plugin-syntax-async-functions";
 
-import { addNamed } from "babel-helper-module-imports";
-
 export default function({ types: t }, options) {
   const { method, module } = options;
   return {
@@ -16,7 +14,7 @@ export default function({ types: t }, options) {
         if (wrapAsync) {
           wrapAsync = t.cloneDeep(wrapAsync);
         } else {
-          wrapAsync = state.methodWrapper = addNamed(path, method, module);
+          wrapAsync = state.methodWrapper = state.file.addImport(path, module, method);
         }
 
         remapAsyncToGenerator(path, state.file, {
